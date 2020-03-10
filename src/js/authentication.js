@@ -9,6 +9,7 @@ window.onload = function() {
         `ws://javascript.local/article/websocket/chat/ws` : // интеграция для разработки с локальным сайтом
         `wss://javascript.info/article/websocket/chat/ws`; // боевая интеграция с javascript.info
 
+
     let socket = new WebSocket(url);
 
     // отправка сообщения из формы
@@ -39,6 +40,7 @@ window.onload = function() {
     // отображение информации в div#messages
     function showMessage(message) {
         let text = JSON.parse(message);
+        console.log(text);
         if ((text.type == 'new') && (text.nik != nik)) {
             console.log('Появился новый чел');
             let chatItem = require('../templates/chatLeftItem.hbs');
@@ -49,7 +51,9 @@ window.onload = function() {
             let messageElem = document.createElement('div');
             messageElem.textContent = message;
             let window = document.querySelector('.chat__window');
-            window.append(messageElem);
+            let messageTemplate = require('../templates/message.hbs');
+            let messageItem = messageTemplate({ text: text.message, time: '17.55' });
+            window.innerHTML = window.innerHTML + messageItem;
         }
     }
 
