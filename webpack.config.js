@@ -5,6 +5,7 @@ let ExtractTextPlugin = require('extract-text-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 let rules = require('./webpack.config.rules')();
 let path = require('path');
+let server = require('./src/js/server.js');
 
 rules.push({
     test: /\.css$/,
@@ -16,7 +17,7 @@ rules.push({
 
 module.exports = {
     entry: {
-        index: './src/index.js',
+        index: './src/index.js'
     },
     devServer: {
         index: 'index.html',

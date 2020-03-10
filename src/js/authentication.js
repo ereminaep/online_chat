@@ -4,11 +4,7 @@ window.onload = function() {
     let date = new Date();
     let id = date.getTime();
 
-    let url = location.host == 'localhost' ?
-        'ws://localhost:8080/ws' : location.host == 'javascript.local' ?
-        `ws://javascript.local/article/websocket/chat/ws` : // интеграция для разработки с локальным сайтом
-        `wss://javascript.info/article/websocket/chat/ws`; // боевая интеграция с javascript.info
-
+    let url = 'ws://localhost:8089';
 
     let socket = new WebSocket(url);
 

@@ -1,59 +1,29 @@
-/**
-Перед запуском:
-> npm install ws
-Далее:
-> node server.js
-> откройте http://localhost:8080 в вашем браузере
-*/
+var WebSocketServer = new require('ws');
 
-const http = require('http');
-const fs = require('fs');
-const ws = new require('ws');
+// подключённые клиенты
+var clients = {};
 
-const wss = new ws.Server({ noServer: true });
+// WebSocket-сервер на порту 8081
+var webSocketServer = new WebSocketServer.Server({
+    port: 8089
+});
+webSocketServer.on('connection', function(ws) {
 
-const clients = new Set();
+    var id = Math.random();
+    clients[id] = ws;
+    console.log("новое соединение " + id);
 
-function accept(req, res) {
+    ws.on('message', function(message) {
+        console.log('получено сообщение ' + message);
 
-    if (req.url == '/' && req.headers.upgrade &&
-        req.headers.upgrade.toLowerCase() == 'websocket' &&
-        // может быть подключён: keep-alive, Upgrade
-        req.headers.connection.match(/\bupgrade\b/i)) {
-        wss.handleUpgrade(req, req.socket, Buffer.alloc(0), onSocketConnect);
-    } else { // страница не найдена
-        res.writeHead(404);
-        res.end();
-    }
-}
-
-function onSocketConnect(ws) {
-    clients.add(ws);
-    log(`новое подключение`);
-
-    ws.on('сообщение', function(message) {
-        log(`получено сообщение: ${message}`);
-
-        message = message.slice(0, 50); // максимальная длина сообщения 50
-
-        for (let client of clients) {
-            client.send(message);
+        for (var key in clients) {
+            clients[key].send(message);
         }
     });
 
-    ws.on('закрыть', function() {
-        log(`подключение закрыто`);
-        clients.delete(ws);
+    ws.on('close', function() {
+        console.log('соединение закрыто ' + id);
+        delete clients[id];
     });
-}
 
-let log;
-if (!module.parent) {
-    log = console.log;
-    http.createServer(accept).listen(8081);
-} else {
-    // для размещения на javascript.info
-    log = function() {};
-    // log = console.log;
-    exports.accept = accept;
-}
+});
