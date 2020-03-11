@@ -7,14 +7,15 @@ let users = {
     items: [],
 };
 
+// сообщения чата
 let messages = {
     type: 'messages',
     items: [],
 };
 
-// WebSocket-сервер на порту 8081
+// WebSocket-сервер 
 var webSocketServer = new WebSocketServer.Server({
-    port: 8098
+    port: 8077
 });
 webSocketServer.on('connection', function(ws) {
 
@@ -33,8 +34,10 @@ webSocketServer.on('connection', function(ws) {
 
         if (mes.type == 'new') {
             users.items.push({ nik: mes.nik, name: mes.name, id: id });
-            ws.send(JSON.stringify(users));
-            ws.send(JSON.stringify(messages));
+            for (var key in clients) {
+                clients[key].send(JSON.stringify(users));
+                clients[key].send(JSON.stringify(messages));
+            }
         } else {
             messages.items.push(mes);
             for (var key in clients) {
@@ -49,11 +52,13 @@ webSocketServer.on('connection', function(ws) {
         delete clients[id];
         for (let i = 0; i < users.items.length; i++) {
             if (users.items[i]['id'] == id) {
-                console.log(users.items[i]);
+                // delete users.items[i];
             }
         }
-        ws.send(JSON.stringify(users));
 
+        /*  for (var key in clients) {
+              clients[key].send(JSON.stringify(users));
+          }*/
     });
 
 });
