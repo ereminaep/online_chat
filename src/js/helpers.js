@@ -1,23 +1,18 @@
 /* библиотека функций-хэлперов */
+function formatDate(time) {
 
-/* загрузить из localStorage данные с ключом item */
-function loadDataBase(data, item) {
+    console.log(time);
+    let now = [time.getHours(), time.getMinutes()];
 
-    if (localStorage.getItem(item) != null) {
-        data = JSON.parse(localStorage.getItem(item));
-    } else {
-        data = [];
+    for (let i = 0; i < now.length; i++) {
+        if (now[i] < 10) {
+            now[i] = '0' + now[i];
+        }
     }
-    return data;
-}
 
-/* обновить либо пополнить хранилище localStorage данными item */
-function reloadDataBase(item, data, key) {
-    data.push(item);
-    localStorage.setItem(key, JSON.stringify(data));
+    return now[0] + ':' + now[1];
 }
 
 export {
-    loadDataBase,
-    reloadDataBase
+    formatDate,
 }

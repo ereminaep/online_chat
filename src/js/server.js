@@ -15,7 +15,7 @@ let messages = {
 
 // WebSocket-сервер 
 var webSocketServer = new WebSocketServer.Server({
-    port: 8077
+    port: 8065
 });
 webSocketServer.on('connection', function(ws) {
 
@@ -33,11 +33,12 @@ webSocketServer.on('connection', function(ws) {
         /* если приходит сообщение с пометкой new - значит у нас новое соединение, отправляем ему архив юзеров и сообщений*/
 
         if (mes.type == 'new') {
-            users.items.push({ nik: mes.nik, name: mes.name, id: id });
+            users.items.push({ nik: mes.nik, name: mes.name, id: id, img: mes.img });
             for (var key in clients) {
                 clients[key].send(JSON.stringify(users));
                 clients[key].send(JSON.stringify(messages));
             }
+
         } else {
             messages.items.push(mes);
             for (var key in clients) {
@@ -52,13 +53,14 @@ webSocketServer.on('connection', function(ws) {
         delete clients[id];
         for (let i = 0; i < users.items.length; i++) {
             if (users.items[i]['id'] == id) {
-                // delete users.items[i];
+                users.items[i] = 'empty';
+                users.items.splice(i, 1);
             }
         }
 
-        /*  for (var key in clients) {
-              clients[key].send(JSON.stringify(users));
-          }*/
+        for (var key in clients) {
+            clients[key].send(JSON.stringify(users));
+        }
     });
 
 });

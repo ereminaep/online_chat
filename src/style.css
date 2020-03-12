@@ -96,12 +96,9 @@ body {
 
 .chat {
     width: 810px;
+    margin: 0 auto;
     height: 452px;
     background-color: #17212b;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -275px 0 0 -405px;
     overflow: hidden;
 }
 
@@ -198,6 +195,12 @@ body {
 
 .chat__message {
     width: 140px;
+    flex-direction: column;
+}
+
+.chat__window .chat__message {
+    flex-direction: row;
+    width: 300px;
 }
 
 .chat__title {
@@ -320,6 +323,9 @@ body {
 
 .chat__item.left .chat__messageItem {
     background-color: #17212b;
+    width: 200px;
+    border-radius: 5px;
+    padding: 6px;
 }
 
 .chat__item.right {

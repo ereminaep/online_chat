@@ -1,2 +1,2 @@
 import './style.css';
-import { authentication } from './js/authentication';
+import { authentication } from './js/socket';
